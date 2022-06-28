@@ -1,0 +1,25 @@
+/* 16 bit MUX 
+* gives x if s==0, y if s==1
+*/
+CHIP MUX16bit2to1{
+    IN x[16], y[16], s;
+    OUT out[16];
+
+    PARTS:
+    MUX2to1(x=x[0], y=y[0], s = s, out=out[0]);
+    MUX2to1(x=x[1], y=y[1], s = s, out=out[1]);
+    MUX2to1(x=x[2], y=y[2], s = s, out=out[2]);
+    MUX2to1(x=x[3], y=y[3], s = s, out=out[3]);
+    MUX2to1(x=x[4], y=y[4], s = s, out=out[4]);
+    MUX2to1(x=x[5], y=y[5], s = s, out=out[5]);
+    MUX2to1(x=x[6], y=y[6], s = s, out=out[6]);
+    MUX2to1(x=x[7], y=y[7], s = s, out=out[7]);
+    MUX2to1(x=x[8], y=y[8], s = s, out=out[8]);
+    MUX2to1(x=x[9], y=y[9], s = s, out=out[9]);
+    MUX2to1(x=x[10], y=y[10], s = s, out=out[10]);
+    MUX2to1(x=x[11], y=y[11], s = s, out=out[11]);
+    MUX2to1(x=x[12], y=y[12], s = s, out=out[12]);
+    MUX2to1(x=x[13], y=y[13], s = s, out=out[13]);
+    MUX2to1(x=x[14], y=y[14], s = s, out=out[14]);
+    MUX2to1(x=x[15], y=y[15], s = s, out=out[15]);
+}

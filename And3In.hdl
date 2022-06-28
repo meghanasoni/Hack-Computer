@@ -1,0 +1,12 @@
+/*And Gate with 3 inputs
+  out = a.b.c
+*/
+
+CHIP And3In{
+    IN a, b, c ;
+    OUT out;
+
+    PARTS:
+    And(a = a , b = b , out = t1);
+    And(a = c , b = t1 , out = out);
+}

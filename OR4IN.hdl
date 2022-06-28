@@ -1,0 +1,14 @@
+/*
+* Or gate with 4 inputs
+* out = a + b + c + d
+*/
+
+CHIP OR4IN{
+    IN a , b , c , d;
+    OUT out;
+
+    PARTS:
+    Or(a = a , b = b, out = t1);
+    Or(a = c , b= d, out = t2);
+    Or(a = t1 , b = t2, out = out);
+}

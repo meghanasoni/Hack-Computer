@@ -1,0 +1,13 @@
+/* And Gate with 4 inputs
+   out = a.b.c.d
+ */
+
+CHIP And4In{
+    IN a, b, c , d ;
+    OUT out;
+
+    PARTS:
+    And(a = a , b = b , out = t1);
+    And(a = c , b = d , out = t2);
+    And(a = t1 , b = t2 , out = out);
+}

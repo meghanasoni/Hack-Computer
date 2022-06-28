@@ -1,0 +1,56 @@
+CHIP HackCPU {
+
+    IN  InM[16], Instruction[16] , reset; 
+
+    OUT Out[16],        // output of M
+        WriteM,  
+        AddressM[15],  // Address in M
+        NextInstr[15]; // enxt instructions address given by PC
+
+    PARTS:
+    //input x1 to ALU comes from DRegister.
+	And( a=Instruction[4], b=Instruction[15], out=writeD);
+	DRegister( in=OutTemp, load=writeD, out=x1 );
+
+	//input y1 to ALU comes from ARegister.
+    Not(in = Instruction[15] , out = nI15);
+	And( a=Instruction[15], b=Instruction[5], out=I15I5 );
+    Or( a=nI15, b=I15I5, out=writeA);
+	MUX16bit2to1( x=Instruction, y=OutTemp, s=Instruction[15], out=inputA);
+	ARegister( in=inputA, load=writeA, out=outA);
+	MUX16bit2to1( x=outA, y=InM, s=Instruction[12], out=y1 );
+
+    //writeM
+	And( a = Instruction[15], b = Instruction[3], out = WriteM );
+
+	//addressM
+	And16( a = outA, b = true, out[0..14] = AddressM );
+
+
+	//ALU
+	// control signals of ALU are 
+    /*zx = I11 , nx = I10 , zy = I9 , ny = I8 , f = I7 , n0 = I6*/
+	HackALU( x=x1, y=y1, zx=Instruction[11], nx=Instruction[10], zy=Instruction[9], ny=Instruction[8], f=Instruction[7], no=Instruction[6], out=OutTemp, out = Out ,zr=zr, ng=ng );
+
+    // To find out the expression for J = Jump
+    // J = (I02I1I0 + (~I2)(~I1)(I0)(~zr)(~ng) +  (~I2)(I1)(~I0)(zr) + (~I2)(I1)(~I0)(zr)(~ng) + (~I2)(I1)(I0)(~zr)(ng) + (I2)(~I1)(I0)(~zr) + (I2)(I1)(~I0)zr(ng))
+    Not(in = Instruction[0] , out = nI0);
+    Not(in = Instruction[1] , out = nI1);
+    Not(in = Instruction[2] , out = nI2);
+    Not(in = zr , out = nzr);
+    Not(in = ng , out = nng);
+    And3In(a = Instruction[2] , b = Instruction[1] , c = Instruction[0] , out = t1);
+    And5In(a = nI2 , b = nI1 , c = Instruction[0] , d = nzr , e = nng , out = t2);
+    And4In(a = nI2 , b = Instruction[1] , c = nI0 , d = zr , out = t3);
+    And5In(a = nI2 , b = Instruction[1] , c = nI0 , d = zr , e = nng , out = t4);
+    And5In(a = nI2 , b = Instruction[1] , c = Instruction[0] , d = nzr , e = ng , out = t5);
+    And4In(a = Instruction[2] , b = nI1 , c = Instruction[0] , d = nzr , out = t6);
+    And5In(a = Instruction[2] , b = Instruction[1] , c = nI0 , d = zr , e = ng , out = t7);
+    Or8In(a = t1 , b = t2 , c = t3 , d = t4 , e = t5 , f = t6 , g = t7 , h = false , out = tempJ);
+    And(a = Instruction[15] , b = tempJ , out = Jump);
+    Not(in = Jump , out = notJ);
+
+	//PC
+	PC( in = outA, load = Jump, inc = notJ, reset = reset, out[0..14] = NextInstr );
+}
+

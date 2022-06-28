@@ -1,0 +1,11 @@
+/*
+* Or gate with 3 inputs
+* out = a + b + c
+*/
+CHIP OR3IN{
+    IN a , b , c;
+    OUT out;
+    PARTS:
+    Or(a = a , b = b , out = t1);
+    Or(a = t1 , b = c , out = out);
+}

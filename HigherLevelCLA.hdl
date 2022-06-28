@@ -1,0 +1,24 @@
+/*Takes higher order propagate and generate terms as input and gives Carry bits C4 , C8 , C12 , C16 as output  */
+
+CHIP HigherLevelCLA{
+    IN P0I , P1I , P2I , P3I , G0 , G1 , G2 , G3 , C;
+    OUT C4 , C8 , C12 , C16 ;
+
+    PARTS:
+    And(a = P0I , b = C , out = c4t);
+    Or(a = c4t , b = G0 , out = C4p);    // Temporary variable . C4p = C4
+
+    And(a = P1I , b = C4p , out = c8t);
+    Or(a = c8t , b = G1 , out = C8p);    // Temporary variable . C8p = C8
+
+    And(a = P2I , b = C8p , out = c12t);
+    Or(a = c12t , b = G2 , out = C12p);  // Temporary variable . C12p = C12
+
+    And(a = P3I , b = C12p , out = c16t);
+    Or(a = c12t , b = G3 , out = C16);     // C16 = P3I.C12 + G3
+
+    And(a = C4p , b = true , out = C4);    // C4 = P0I.C + G0
+    And(a = C8p , b = true , out = C8);    // C8 = P1I.C4 + G1
+    And(a = C12p , b = true , out = C12);  // C12 = P2I.C8 + G2
+
+}

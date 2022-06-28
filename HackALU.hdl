@@ -1,0 +1,24 @@
+/*   Team 10 :
+     	Meghana Gopal Soni (cs20b051)
+     	Nalli Sai Soumya (cs20b053)
+     	Chellarapu Priyanka (cs20b022)
+*/
+
+CHIP HackALU{
+    IN x[16], y[16], zx, nx, zy, ny, f, no;//x and y are the inputs whereas the rest of these are control signals
+    OUT zr, ng, out[16];
+
+    PARTS:
+    MUX16bit2to1(x = x, y = false, s = zx, out = a);    
+    MUX16bit2to1(x = y, y = false, s = zy, out = b);
+    XOR16(x = a, y = nx, out = p);
+    XOR16(x = b, y = ny, out = q);
+    Adder16(x = p, y = q, SUM = pPLUSq);    //Chip to calculate sum of p and q
+    AND16bit(x = p, y = q, out = pANDq);    //Chip to calculate (p AND q)
+    //If f == 1, we perform addition operation, else we perform the And operation
+    //no is the negation bit. If no == 1, the output is negated
+    MUX16bit2to1(x = pANDq, y = pPLUSq, s = f, out = r);
+    XOR16(x = r, y = no, out = temp);
+    STATUS(x = temp , zr = zr , ng = ng);
+    Output(in = temp , out = out);
+}

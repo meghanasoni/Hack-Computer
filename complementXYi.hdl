@@ -1,0 +1,27 @@
+/* For each bit of y ,  P is such that (~x).yi = 0 if yi = 0 
+   and (~x).yi = ~x if yi = 1
+*/
+
+CHIP complementXYi {
+    IN x[8] , y;
+    OUT P[8];
+
+    PARTS:
+    And(a = x[0] , b = y , out = nP0);
+    And(a = x[1] , b = y , out = nP1);
+    And(a = x[2] , b = y , out = nP2);
+    And(a = x[3] , b = y , out = nP3);
+    And(a = x[4] , b = y , out = nP4);
+    And(a = x[5] , b = y , out = nP5);
+    And(a = x[6] , b = y , out = nP6);
+    And(a = x[7] , b = y , out = nP7);
+
+    Not(in=nP0, out=P[0]);
+    Not(in=nP1, out=P[1]);
+    Not(in=nP2, out=P[2]);
+    Not(in=nP3, out=P[3]);
+    Not(in=nP4, out=P[4]);
+    Not(in=nP5, out=P[5]);
+    Not(in=nP6, out=P[6]);
+    Not(in=nP7, out=P[7]);
+}

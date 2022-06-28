@@ -1,0 +1,12 @@
+/*gives x if s==0, y if s==1*/
+
+CHIP MUX2to1{
+    IN x,y,s;
+    OUT out;
+
+    PARTS:
+    Not(in=s, out=ns);
+    And(a=x, b=ns, out=ans);
+    And(a=y, b=s, out=ys);
+    Or(a=ans, b=ys, out=out);
+    }

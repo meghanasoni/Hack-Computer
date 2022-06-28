@@ -1,0 +1,31 @@
+/* Takes 2 inputs x and y of 4 bits and gives Higher order Propagate and Generate Terms as Output
+   P = P3.P2.P1.P0
+   G = P3.P2.P1.G0 + P3.P2.G1 + P3.G2 + G3
+   where Pi = x[i] Xor y[i]  ,  Gi = x[i].y[i]
+*/
+
+CHIP PropGen{
+    IN x[4] , y[4] ;
+    OUT P , G ;
+
+    PARTS:
+    Xor(a = x[0] , b = y[0] , out = P0);
+    Xor(a = x[1] , b = y[1] , out = P1);
+    Xor(a = x[2] , b = y[2] , out = P2);
+    Xor(a = x[3] , b = y[3] , out = P3);
+
+    And(a = x[0] , b = y[0] , out = G0);
+    And(a = x[1] , b = y[1] , out = G1);
+    And(a = x[2] , b = y[2] , out = G2);
+    And(a = x[3] , b = y[3] , out = G3);
+
+    And4In(a = P3 , b = P2 , c = P1 , d = P0 , out = P);
+
+    And4In(a = P3 , b = P2 , c = P1 , d = G0 , out = t1);
+    And3In(a = P3 , b = P2 , c = G1 , out = t2);
+    And(a = P3 , b = G2 , out = t3);
+    OR4IN(a = t1 , b= t2 , c = t3 , d = G3 , out = G);
+
+    
+
+}
